@@ -1282,6 +1282,13 @@ asap@~2.0.3:
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY=
 
+ase-utils@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/ase-utils/-/ase-utils-0.1.1.tgz#7522a822af23fd2a4d4bef3df5fabfeca01d826d"
+  integrity sha1-dSKoIq8j/SpNS+899fq/7KAdgm0=
+  dependencies:
+    bytebuffer "3.5.4"
+
 asn1.js@^4.0.0:
   version "4.10.1"
   resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-4.10.1.tgz#b9c2bf5805f1e64aadeed6df3a2bfafb5a73f5a0"
@@ -2006,10 +2013,23 @@ buffer@^5.2.1:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
 
+bufferview@~1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/bufferview/-/bufferview-1.0.1.tgz#7afd74a45f937fa422a1d338c08bbfdc76cd725d"
+  integrity sha1-ev10pF+Tf6QiodM4wIu/3HbNcl0=
+
 builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha1-hZgoeOIbmOHGZCXgPQF0eI9Wnug=
+
+bytebuffer@3.5.4:
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/bytebuffer/-/bytebuffer-3.5.4.tgz#436e2733174f96aaa978b0926749e83fa162e786"
+  integrity sha1-Q24nMxdPlqqpeLCSZ0noP6Fi54Y=
+  dependencies:
+    bufferview "~1"
+    long "~2 >=2.2.3"
 
 bytes@3.0.0:
   version "3.0.0"
@@ -4788,6 +4808,13 @@ gaze@^1.0.0:
   dependencies:
     globule "^1.0.0"
 
+generative-design-library.js@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/generative-design-library.js/-/generative-design-library.js-0.1.2.tgz#904b7372493ceeb77832fc1b9d74dde7b913ed5c"
+  integrity sha512-aywc3xnwsheN+uESSEmkd44/iPg9mlFEEdmqnqzxiVRE9xAyUHNT3xCCZx8QXVE33xvm/7JmTXuTz+b9P6Y0Ww==
+  dependencies:
+    ase-utils "^0.1.1"
+
 get-caller-file@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.3.tgz#f978fa4c90d1dfe7ff2d6beda2a515e713bdcf4a"
@@ -6823,6 +6850,11 @@ loglevel@^1.4.1, loglevel@^1.6.4:
   version "1.6.4"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.4.tgz#f408f4f006db8354d0577dcf6d33485b3cb90d56"
   integrity sha512-p0b6mOGKcGa+7nnmKbpzR6qloPbrgLcnio++E+14Vo/XffOGwZtRpUhr8dTH/x2oCMmEoIU0Zwm3ZauhvYD17g==
+
+"long@~2 >=2.2.3":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/long/-/long-2.4.0.tgz#9fa180bb1d9500cdc29c4156766a1995e1f4524f"
+  integrity sha1-n6GAux2VAM3CnEFWdmoZleH0Uk8=
 
 longest-streak@^2.0.1:
   version "2.0.3"

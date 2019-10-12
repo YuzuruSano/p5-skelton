@@ -1,0 +1,8 @@
+node_modules/*
+.sass-cache/*
+build/*
+dev/.sass-cache
+.node-version
+**/*.log
+**/*.html
+.env

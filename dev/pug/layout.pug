@@ -1,0 +1,41 @@
+-
+	var ogp = {
+		'title':'test',
+		'description':'test',
+		'url':'test',
+		'image':'test',
+		'siteName':'test',
+		'lang':'test',
+		'fbid':'test',
+		'fbid':'test'
+	}
+-
+	var meta = {
+		title:'title',
+		desc:'desc',
+		key:'key'
+	}
+include _inc_mixins
+include _inc_conditional
+block slug
+	- var slug = ''
+	- var is_contact = false;
+head
+	block meta_data
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(charset='UTF-8')
+		meta#viewport(content='width=device-width', name='viewport')
+		+base_meta(meta)
+		+ogp(ogp)
+	block css
+		include _inc_css
+body#top(class=slug)
+	#wrap
+		block header
+		block contents
+		block footer
+		block flg
+			#responsive_flg
+	block scripts
+		include _inc_scripts
+</html>

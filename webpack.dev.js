@@ -13,13 +13,9 @@ require('dotenv').config();
 const PORT = process.env.PORT;
 
 const config = merge(common, {
-  output: {
-    publicPath: `http://localhost:${PORT}/`
-  },
   mode: "development",
   devtool: "inline-source-map",
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new MiniCssExtractPlugin({
       filename: "css/style.css"
@@ -46,19 +42,10 @@ const config = merge(common, {
     open: true,
     compress: true,
     inline: true,
-    hot: true,
+    hot: false,
     disableHostCheck: true
   }
 });
-
-for (const key in config.entry) {
-  if (config.entry.hasOwnProperty(key)) {
-    config.entry[key].unshift(
-      `webpack-hot-middleware/client?path=http://localhost:${PORT}/__webpack_hmr`
-    );
-    config.entry[key].unshift("webpack/hot/only-dev-server");
-  }
-}
 
 config.module.rules.push({
   test: /\.scss$/,

@@ -48,6 +48,11 @@ let s = (sk) => {
   let pathElement;
   let creature;
 
+  let isJumping = false;
+  let up = true;
+  let jump0 = 0;
+  let jumpMax = 300;
+
   sk.setup = () => {
     sk.createCanvas(1000, 1000);
     actStrokeCap = sk.ROUND;
@@ -76,8 +81,8 @@ let s = (sk) => {
 
     // 次の位置に進める
     nowPathPosition = (nowPathPosition + SPEED / 100);
-    let roatateBase1 = nowPathPosition - 200;//現在の位置からのラジアン計算ポイント1 数値を増やすと緩やかな変化に
-    let roatateBase2 = nowPathPosition + 200;//現在の位置からのラジアン計算ポイント2 数値を増やすと緩やかな変化に
+    let roatateBase1 = nowPathPosition - 10 ;//現在の位置からのラジアン計算ポイント1 数値を増やすと緩やかな変化に
+    let roatateBase2 = nowPathPosition + 10 ;//現在の位置からのラジアン計算ポイント2 数値を増やすと緩やかな変化に
     if (roatateBase1 < 0) {
       roatateBase1 = 0;
     }
@@ -93,24 +98,66 @@ let s = (sk) => {
       const dx = pt2.x - pt0.x;
       const dy = pt2.y - pt0.y;
       let rotate = Math.atan(dy / dx);
+      
       if (dx < 0) {
         rotate += Math.PI;
       }
-      
+
       // DOM上の座標を求める
       const svgClientRect = svgInfo.element.getBoundingClientRect();
-      const x = pt1.x * svgClientRect.width / svgInfo.viewBox.width;
-      const y = pt1.y * svgClientRect.height / svgInfo.viewBox.height;
-      sk.clear();
+      let x = (pt1.x * svgClientRect.width / svgInfo.viewBox.width) + randomX;
+      let y = (pt1.y * svgClientRect.height / svgInfo.viewBox.height) + randomY;
+      
+      //jump
+      if (isJumping){
+        const jump = (rotate < 0) ? rotate - 1.5708 : rotate + 1.5708;
+        const jumpX = sk.sin(jump) * jump0; // 円周上のX座標の位置
+        const jumpY = sk.cos(jump) * jump0;
+
+        y = y + jumpY;
+        x = x + jumpX;
+        
+        if (jump0 > jumpMax) {
+          up = false;
+        }
+
+        if(up){
+          jump0 = jump0 + 50;
+        }else{
+          jump0 = jump0 - 50;
+        }
+        
+        if (jump0 < 0){
+          isJumping = false;
+          up = true;
+        } 
+      }
+      
+      //jump
+      //to do 角度が負のときにおかしい
+      // 勾配がゆるいときにおかしいん
       sk.push();
+      //ask.clear();
+      sk.imageMode(sk.CENTER);
       creature.style('transform', `rotate(${rotate}rad)`);
-      creature.position(x + randomX, y + randomY);
+      creature.position(x, y);
       sk.pop();
+
+      sk.rect(x, y, 10, 10);
+
+      
     }
   }
 
   sk.mousePressed = () => {
     //actRandomSeed = sk.random(100000);
+  }
+  //キーイベント
+  sk.keyPressed = (event) => {
+    if (event.key == 'a'){
+      console.log('a');
+      isJumping = true;
+    }
   }
 }
 const P5 = new p5(s);

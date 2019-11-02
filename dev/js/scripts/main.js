@@ -27,6 +27,8 @@ let s = (sk) => {
   let jump0 = 0;
   let jumpMax = 300;
 
+  let xoff = 0;
+
   sk.setup = () => {
     const canvas = sk.createCanvas(sk.windowWidth, sk.windowHeight);
     canvas.parent('canvas');
@@ -43,10 +45,16 @@ let s = (sk) => {
     const height = sk.height;
     const mouseX = sk.pmouseX;
     const mouseY = sk.pmouseY;
-    const speed = sk.random(10, 500);
+    let currentX = 0;
+    let currentY = 0;
+    xoff = xoff + 0.01;
+    let n = sk.noise(xoff) * sk.random(200, 400);
+
+    const speed = n;
     const randomX = sk.random(10, 15);
     const randomY = sk.random(10, 15);
-
+    
+    
     if (svgInfo){
       
       //現在の座標がpathの全長を越していたら0に初期化
@@ -59,40 +67,59 @@ let s = (sk) => {
       const p = imgPos.getNowImgPosition(creature, svgInfo, nowPathPosition, prevX, prevY, speed);
       let { x, y, r, originX, originY} = {...p};
       sk.rect(originX, originY, 10, 10);
-
+      
+      sk.push();
+      //sk.clear();
+      creature.style('transform', `rotate(${r}rad) `);
+      creature.style('transform-origin', `center`);
       //jump
       if (isJumping){
-        const jump = (r < 0) ? r - 1.5708 : r + 1.5708;
+        let jump;
+
+        //右下方向移動中
+        if ((x > prevX) && (y > prevY)){
+          jump = r * sk.radians(90) / 3 * -1;
+        }
+        //右上方向移動中
+        if ((x > prevX) && (y < prevY)) {
+          jump = sk.radians(90) * r;
+          jump += Math.PI;
+        }
+        //左下方向移動中
+        if ((x < prevX) && (y > prevY)) {
+          jump = r
+        }
+        //左上方向移動中
+        if ((x < prevX) && (y < prevY)) {
+          jump = r * sk.radians(90);
+        }
+
         const jumpX = sk.sin(jump) * jump0;
         const jumpY = sk.cos(jump) * jump0;
 
-        y = y + jumpY;
-        x = x + jumpX;
-        
         if (jump0 > jumpMax) {
           up = false;
         }
-
+       
         if(up){
-          jump0 = jump0 + 50;
+          jump0 = jump0 + (20 * 0.8);
         }else{
-          jump0 = jump0 - 50;
+          jump0 = jump0 - (50 * 1.2);
         }
         
         if (jump0 < 0){
           isJumping = false;
           up = true;
-        } 
+          jump0 = 0;
+        }
+        
+        currentX = (prevX < x) ? x - jumpX : x + jumpX;
+        currentY = (prevY < y) ? y - jumpY : y + jumpY;
+      }else{
+        currentX = x;
+        currentY = y;
       }
-
-      //jump
-      //to do 角度が負のときにおかしい
-      // 勾配がゆるいときにおかしいん
-      sk.push();
-      //sk.clear();
-      creature.style('transform', `rotate(${r}rad) `);
-      creature.style('transform-origin', `center`);
-      creature.position(x, y);
+      creature.position(currentX, currentY);
       sk.pop();
 
       prevX = x;

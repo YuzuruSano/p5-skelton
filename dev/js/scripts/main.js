@@ -2,7 +2,8 @@ import Entry from "entry";
 import BrowserDetect from "modules/BrowserDetect";
 import SortColors from "modules/SortColors";
 import SVG from "modules/SVG";
-import ImgPos from "modules/ImgPos";
+
+import ImgInstance from "modules/ImgInstance";
 import * as gd from "generative-design-library.js";
 import * as p5 from 'p5';
 import 'p5/lib/addons/p5.sound';
@@ -10,34 +11,44 @@ import 'p5/lib/addons/p5.dom';
 import { createNoSubstitutionTemplateLiteral } from "typescript";
 
 const svg = new SVG();
-const imgPos = new ImgPos();
+const imgInstance = new ImgInstance();
+
+const creaturesData = [
+  {
+    svg: '../images/svg.svg',
+    img: '../images/creature.gif',
+    nowPathPosition: 0,
+    prevX: 0,
+    prevY: 0,
+    isJumping: false,
+    up: true,
+    jumpStartAt: 0,
+    jumpMax: 300,
+  }
+]
 
 let s = (sk) => {
-  let svgInfo;
-  let nowPathPosition = 0;
-  let maxPathLength;
+  let creatures = [];
+  let instances = [];
 
-  let prevX = 0;
-  let prevY = 0;
-
-  let creature;
-
-  let isJumping = false;
-  let up = true;
-  let jump0 = 0;
-  let jumpMax = 300;
-
-  let xoff = 0;
+  sk.preload = async () => {
+    for (let index = 0; index < creaturesData.length; index++) {
+      const c = creaturesData[index];
+      await svg.getFile(c.svg).then(data => {
+        const cc = {
+          ...c, 
+          img: sk.createImg(c.img).parent('canvas'),
+          svgInfo: data,
+          maxPathLength: data.element.querySelector('path').getTotalLength()
+        }
+        creatures.push(cc);
+      });
+    }
+  }
 
   sk.setup = () => {
     const canvas = sk.createCanvas(sk.windowWidth, sk.windowHeight);
     canvas.parent('canvas');
-    creature = sk.createImg("../images/creature.gif");
-
-    svg.getFile('../images/svg.svg').then(data => {
-      svgInfo = data;
-      maxPathLength = svgInfo.element.querySelector('path').getTotalLength();
-    });
   }
 
   sk.draw = () => {
@@ -45,85 +56,12 @@ let s = (sk) => {
     const height = sk.height;
     const mouseX = sk.pmouseX;
     const mouseY = sk.pmouseY;
-    let currentX = 0;
-    let currentY = 0;
-    xoff = xoff + 0.01;
-    let n = sk.noise(xoff) * sk.random(200, 400);
-
-    const speed = n;
-    const randomX = sk.random(10, 15);
-    const randomY = sk.random(10, 15);
     
-    
-    if (svgInfo){
-      
-      //現在の座標がpathの全長を越していたら0に初期化
-      nowPathPosition = (nowPathPosition + speed / 100);
-      if (nowPathPosition > maxPathLength) {
-        nowPathPosition = 0;
-      }
-
-      //画像の現在位置と傾きを取得
-      const p = imgPos.getNowImgPosition(creature, svgInfo, nowPathPosition, prevX, prevY, speed);
-      let { x, y, r, originX, originY} = {...p};
-      sk.rect(originX, originY, 10, 10);
-      
-      sk.push();
-      //sk.clear();
-      creature.style('transform', `rotate(${r}rad) `);
-      creature.style('transform-origin', `center`);
-      //jump
-      if (isJumping){
-        let jump;
-
-        //右下方向移動中
-        if ((x > prevX) && (y > prevY)){
-          jump = r * sk.radians(90) / 3 * -1;
-        }
-        //右上方向移動中
-        if ((x > prevX) && (y < prevY)) {
-          jump = sk.radians(90) * r;
-          jump += Math.PI;
-        }
-        //左下方向移動中
-        if ((x < prevX) && (y > prevY)) {
-          jump = r
-        }
-        //左上方向移動中
-        if ((x < prevX) && (y < prevY)) {
-          jump = r * sk.radians(90);
-        }
-
-        const jumpX = sk.sin(jump) * jump0;
-        const jumpY = sk.cos(jump) * jump0;
-
-        if (jump0 > jumpMax) {
-          up = false;
-        }
-       
-        if(up){
-          jump0 = jump0 + (20 * 0.8);
-        }else{
-          jump0 = jump0 - (50 * 1.2);
-        }
-        
-        if (jump0 < 0){
-          isJumping = false;
-          up = true;
-          jump0 = 0;
-        }
-        
-        currentX = (prevX < x) ? x - jumpX : x + jumpX;
-        currentY = (prevY < y) ? y - jumpY : y + jumpY;
-      }else{
-        currentX = x;
-        currentY = y;
-      }
-      creature.position(currentX, currentY);
-      sk.pop();
-
-      prevX = x;
-      prevY = y;
+  for (let i = 0; i < creatures.length; i++) {
+      let c = creatures[i];
+      if (!c.svgInfo) continue;
+      c = imgInstance.setInstance(sk, c);
+      instances.push(c);
     }
   }
 
@@ -133,8 +71,8 @@ let s = (sk) => {
   //キーイベント
   sk.keyPressed = (event) => {
     if (event.key == 'a'){
-      console.log('a');
-      isJumping = true;
+
+      instances[0].isJumping = true;
     }
   }
 }

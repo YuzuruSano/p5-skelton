@@ -15,8 +15,41 @@ const imgInstance = new ImgInstance();
 
 const creaturesData = [
   {
-    svg: '../images/svg.svg',
+    svg: '../images/path1.svg',
     img: '../images/creature.gif',
+    nowPathPosition: 0,
+    prevX: 0,
+    prevY: 0,
+    isJumping: false,
+    up: true,
+    jumpStartAt: 0,
+    jumpMax: 300,
+  },
+  {
+    svg: '../images/path2.svg',
+    img: '../images/creature2.gif',
+    nowPathPosition: 0,
+    prevX: 0,
+    prevY: 0,
+    isJumping: false,
+    up: true,
+    jumpStartAt: 0,
+    jumpMax: 300,
+  },
+  {
+    svg: '../images/path3.svg',
+    img: '../images/creature3.gif',
+    nowPathPosition: 0,
+    prevX: 0,
+    prevY: 0,
+    isJumping: false,
+    up: true,
+    jumpStartAt: 0,
+    jumpMax: 300,
+  },
+  {
+    svg: '../images/path4.svg',
+    img: '../images/creature4.gif',
     nowPathPosition: 0,
     prevX: 0,
     prevY: 0,
@@ -31,12 +64,12 @@ let s = (sk) => {
   let creatures = [];
   let instances = [];
 
-  sk.preload = async () => {
-    for (let index = 0; index < creaturesData.length; index++) {
-      const c = creaturesData[index];
-      await svg.getFile(c.svg).then(data => {
+  sk.preload = () => {
+    for (let index = 1; index <= creaturesData.length; index++) {
+      const c = creaturesData[index - 1];
+      svg.getFile(c.svg, `#path${index}`).then(data => {
         const cc = {
-          ...c, 
+          ...c,
           img: sk.createImg(c.img).parent('canvas'),
           svgInfo: data,
           maxPathLength: data.element.querySelector('path').getTotalLength()
@@ -45,7 +78,6 @@ let s = (sk) => {
       });
     }
   }
-
   sk.setup = () => {
     const canvas = sk.createCanvas(sk.windowWidth, sk.windowHeight);
     canvas.parent('canvas');
@@ -57,11 +89,11 @@ let s = (sk) => {
     const mouseX = sk.pmouseX;
     const mouseY = sk.pmouseY;
     
-  for (let i = 0; i < creatures.length; i++) {
+    for (let i = 0; i < creatures.length; i++) {
       let c = creatures[i];
       if (!c.svgInfo) continue;
       c = imgInstance.setInstance(sk, c);
-      instances.push(c);
+      //instances.push(c);
     }
   }
 

@@ -1,4 +1,5 @@
 
+let frame = 0;
 export default class ImgPos {
     /**
     * パスから画像オブジェクトのdocument上の現在座標とパス追従の角度を返却する
@@ -14,11 +15,17 @@ export default class ImgPos {
         let y = (pt1.y * svgClientRect.height / svgViewBox.height);
         const originX = x;
         const originY = y;
-        x = (prevX < x) ? x - (img.width / 2) : x + (img.width / 2);
-        y = (prevY < y) ? y - (img.height / 2) : y + (img.height / 2);
 
+        //x = (prevX < x) ? x - (img.width / 2) : x + (img.width / 2);
+        //y = (prevY < y) ? y + (img.height / 2) : y - (img.height / 2);
+        x = x - (img.width / 2);
+        y = y - (img.height / 2)
+        
+        // if (frame == 200) {
+        //     //noLoop();
+        // }
         const r = this.getRotate(pathElement, nowPathPosition, maxPathLength, 200);
-
+        frame++;
         return {
             x: x,
             y: y,

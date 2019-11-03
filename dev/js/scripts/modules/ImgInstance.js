@@ -21,29 +21,33 @@ export default class ImgInstance {
         
         let { img, svgInfo, nowPathPosition, prevX, prevY, isJumping, jumpStartAt, jumpMax } = { ...settings};
         
-        const xoff = sk.random(0.5, 1.2);
-        let n = sk.noise(xoff) * sk.random(200, 1000);
+        if (img.height <= 0 ) return;
+        
+        const xoff = sk.random(0.5, 10);
+        let n = sk.noise(xoff) * sk.random(200, 600);
         const speed = n;
 
         let currentX = 0;
         let currentY = 0;
+        
         //現在の座標がpathの全長を越していたら0に初期化
         nowPathPosition = (nowPathPosition + speed / 100);
         if (nowPathPosition > obj.maxPathLength) {
             nowPathPosition = 0;
         }
+
         //画像の現在位置と傾きを取得
         const p = imgPos.getNowImgPosition(img, svgInfo, nowPathPosition, prevX, prevY, speed);
         let { x, y, r, originX, originY } = { ...p };
         sk.rect(originX, originY, 10, 10);
-
+        
         sk.push();
         //sk.clear();
         img.style('transform', `rotate(${r}rad) `);
         img.style('transform-origin', `center`);
         //jump
         if(isJumping) {
-            
+            console.log(isJumping);
             const param = {
                 sk: sk,
                 x: x,
@@ -64,7 +68,7 @@ export default class ImgInstance {
             if (obj.up) {
                 jumpStartAt = jumpStartAt + (30 * 0.8);
             } else {
-                jumpStartAt = jumpStartAt - (100 * 1.2);
+                jumpStartAt = jumpStartAt - (80 * 1.2);
             }
             
             if (jumpStartAt < 0) {
@@ -81,12 +85,13 @@ export default class ImgInstance {
             currentX = x;
             currentY = y;
         }
+        
         img.position(currentX, currentY);
         sk.pop();
 
         obj.nowPathPosition = nowPathPosition;
-        obj.prevX = x;
-        obj.prevY = y;
+        obj.prevX = originX;
+        obj.prevY = originY;
 
         return obj;
     }

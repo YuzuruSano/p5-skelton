@@ -20,8 +20,9 @@ export default class SVG {
             .then(function (response) {
                 const svg = response.data;
                 document.body.insertAdjacentHTML('beforeend', svg);
+                return svg;
             })
-            .then(() => {
+            .then((svg) => {
                 const info = this.getSvgInfo(selector);
                 return info;
             })

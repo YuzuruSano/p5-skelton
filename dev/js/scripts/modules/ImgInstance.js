@@ -29,7 +29,7 @@ export default class ImgInstance {
 
         let currentX = 0;
         let currentY = 0;
-        
+
         //現在の座標がpathの全長を越していたら0に初期化
         nowPathPosition = (nowPathPosition + speed / 100);
         if (nowPathPosition > obj.maxPathLength) {
@@ -39,15 +39,14 @@ export default class ImgInstance {
         //画像の現在位置と傾きを取得
         const p = imgPos.getNowImgPosition(img, svgInfo, nowPathPosition, prevX, prevY, speed);
         let { x, y, r, originX, originY } = { ...p };
-        sk.rect(originX, originY, 10, 10);
+        //sk.rect(originX, originY, 10, 10);
         
         sk.push();
-        //sk.clear();
+        sk.clear();
         img.style('transform', `rotate(${r}rad) `);
         img.style('transform-origin', `center`);
         //jump
         if(isJumping) {
-            console.log(isJumping);
             const param = {
                 sk: sk,
                 x: x,

@@ -3,77 +3,21 @@ import BrowserDetect from "modules/BrowserDetect";
 import SortColors from "modules/SortColors";
 import SVG from "modules/SVG";
 import ImgInstance from "modules/ImgInstance";
+import creaturesFloatingData from "modules/creaturesFloatingData";
 import * as gd from "generative-design-library.js";
 import * as p5 from 'p5';
 import 'p5/lib/addons/p5.sound';
 import 'p5/lib/addons/p5.dom';
 import { createNoSubstitutionTemplateLiteral } from "typescript";
 
+/**
+  * 1.2匹くらいでてる
+  * 2.10匹くらいまで増やす（増やすのSPで投げる）
+  * 3.増やし切ったら弾ける
+  * 4.1に戻る
+ */
 const svg = new SVG();
 const imgInstance = new ImgInstance();
-
-const creaturesFloatingData = [
-  {
-    svg: '../images/path1.svg',
-    currentImg:{},
-    img: '../images/creature.gif',
-    imgBomb:'../images/bomb.gif',
-    nowPathPosition: 0,
-    prevX: 0,
-    prevY: 0,
-    isJumping: false,
-    up: true,
-    jumpStartAt: 0,
-    jumpMax: 300,
-    onStart:true,
-    bombFrame:0
-  },
-  {
-    svg: '../images/path2.svg',
-    currentImg:{},
-    img: '../images/creature2.gif',
-    imgBomb:'../images/bomb.gif',
-    nowPathPosition: 0,
-    prevX: 0,
-    prevY: 0,
-    isJumping: false,
-    up: true,
-    jumpStartAt: 0,
-    jumpMax: 300,
-    onStart:true,
-    bombFrame:0
-  },
-  {
-    svg: '../images/path3.svg',
-    currentImg:{},
-    img: '../images/creature3.gif',
-    imgBomb:'../images/bomb.gif',
-    nowPathPosition: 0,
-    prevX: 0,
-    prevY: 0,
-    isJumping: false,
-    up: true,
-    jumpStartAt: 0,
-    jumpMax: 300,
-    onStart:false,
-    bombFrame:0
-  },
-  {
-    svg: '../images/path4.svg',
-    currentImg:{},
-    img: '../images/creature4.gif',
-    imgBomb:'../images/bomb.gif',
-    nowPathPosition: 0,
-    prevX: 0,
-    prevY: 0,
-    isJumping: false,
-    up: true,
-    jumpStartAt: 0,
-    jumpMax: 300,
-    onStart:false,
-    bombFrame:0
-  }
-]
 
 let s = (sk) => {
   //おばけのシーン定義
@@ -130,12 +74,13 @@ let s = (sk) => {
     for (let index = 0; index < CurrentCreatureSchece + 1; index++) {
       let c = creatures[index];
       if (c && 'svgInfo' in c) {
+        //最終シーンでリセット画像に変更する
         if (CreatureSchece[CurrentCreatureSchece] == 'end') {
           c.currentImg = c.bombImg;
           c.defaultImg.hide();
           resetFrame++;
         }
-
+        //現状シーンで表示するイメージを出力、位置・傾きなどを保持したオブジェクト生成
         c.currentImg.show();
         const cInstance = imgInstance.setInstance(sk, c);
 
@@ -149,8 +94,7 @@ let s = (sk) => {
           c.isShown = true;
         }
 
-        //出現時のエフェクト制御
-        //一定期間で非表示に
+        //出現時のエフェクト制御、一定期間で非表示に
         if (c.bombFrame > 0) {
           c.bombFrame++;
         }

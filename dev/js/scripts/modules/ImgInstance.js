@@ -7,7 +7,7 @@ const motion = new Motion();
 export default class ImgInstance {
     setInstance(sk, obj){
         const settings = {
-            img:obj.img || {},
+            currentImg: obj.currentImg || {},
             svgInfo:obj.svgInfo || {},
             nowPathPosition: obj.nowPathPosition || 0,
             prevX: obj.prevX || 0,
@@ -19,9 +19,9 @@ export default class ImgInstance {
             ...obj
         }
         
-        let { img, svgInfo, nowPathPosition, prevX, prevY, isJumping, jumpStartAt, jumpMax } = { ...settings};
+        let { currentImg, svgInfo, nowPathPosition, prevX, prevY, isJumping, jumpStartAt, jumpMax } = { ...settings};
         
-        if (img.height <= 0 ) return;
+        if (currentImg.height <= 0 ) return;
         
         const xoff = sk.random(0.5, 10);
         let n = sk.noise(xoff) * sk.random(200, 600);
@@ -37,14 +37,14 @@ export default class ImgInstance {
         }
 
         //画像の現在位置と傾きを取得
-        const p = imgPos.getNowImgPosition(img, svgInfo, nowPathPosition, prevX, prevY, speed);
+        const p = imgPos.getNowImgPosition(currentImg, svgInfo, nowPathPosition, prevX, prevY, speed);
         let { x, y, r, originX, originY } = { ...p };
         //sk.rect(originX, originY, 10, 10);
         
         sk.push();
         sk.clear();
-        img.style('transform', `rotate(${r}rad) `);
-        img.style('transform-origin', `center`);
+        currentImg.style('transform', `rotate(${r}rad) `);
+        currentImg.style('transform-origin', `center`);
         //jump
         if(isJumping) {
             const param = {
@@ -85,13 +85,15 @@ export default class ImgInstance {
             currentY = y;
         }
         
-        img.position(currentX, currentY);
+        currentImg.position(currentX, currentY);
         sk.pop();
 
         obj.nowPathPosition = nowPathPosition;
         obj.prevX = originX;
         obj.prevY = originY;
-
+        obj.currentX = currentX;
+        obj.currentY = currentY;
+        obj.r = r;
         return obj;
     }
 }
